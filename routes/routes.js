@@ -41,9 +41,13 @@ async function routes(fastify, options) {
   fastify.delete('/delete/:id', async (request, reply) => {
     reply.header("Access-Control-Allow-Origin", "*");
     await request.jwtVerify()
-
+    const role = request.body.role;
+    console.log(role);
     const id = new ObjectId(request.params.id);
 
+    if (role != "admin") {
+      return { message: "Du har inte tillgång till denna funktion", deleted: false }
+    }
     const result = await collection.deleteOne({ _id: id })
     if (result.deletedCount == 0) {
       return { message: "Bloginlägg med id '" + request.params.id + "' finns inte", deleted: false }

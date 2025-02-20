@@ -6,18 +6,18 @@ async function loginRoutes(fastify, options) {
 
     fastify.post('/login', async (request, reply) => {
       reply.header("Access-Control-Allow-Origin", "*");
-  
       const { username, password } = request.body;
       if (!username || !password) {
         return { message: "användarnamn/lösenord saknas" }
       }
+      
       //hämtar user
       const user = await users.find({ username: username }).toArray();
 
       if (user[0] != undefined) { //om user finns kollas lösenord
 
         if (await bcrypt.compare(password, user[0].password)) {
-          const token = fastify.jwt.sign({ payload: "data" }, { expiresIn: '10m' })
+          const token = fastify.jwt.sign({ payload: "data" }, { expiresIn: '1h' })
           return { token: token, user: user[0], loggedIn: true}
 
         } else {

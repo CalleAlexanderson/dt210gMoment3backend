@@ -17,15 +17,14 @@ async function loginRoutes(fastify, options) {
       if (user[0] != undefined) { //om user finns kollas lösenord
 
         if (await bcrypt.compare(password, user[0].password)) {
-
           const token = fastify.jwt.sign({ payload: "data" }, { expiresIn: '10m' })
-          return { token: token }
+          return { token: token, user: user[0], loggedIn: true}
 
         } else {
-          return { message: "användarnamn och lösenord matchar ej" }
+          return { message: "användarnamn och lösenord matchar ej", loggedIn: false}
         }
       } else {
-        return { message: "användarnamn och lösenord matchar ej" }
+        return { message: "användarnamn och lösenord matchar ej", loggedIn: false }
       }
   
     })

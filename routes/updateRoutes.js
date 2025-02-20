@@ -7,23 +7,22 @@ async function updateRoutes(fastify, options) {
     reply.header("Access-Control-Allow-Origin", "*");
     await request.jwtVerify()
 
-    let { title, author, content } = request.body;
+    let { title, content } = request.body;
     let date = new Date();
     const id = new ObjectId(request.params.id);
 
-    if (title === undefined || author === undefined || content === undefined) {
-      return { message: "fälten 'title', 'author' och 'content' krävs i body" }
+    if (title === undefined || content === undefined) {
+      return { message: "fälten 'title' och 'content' krävs i body" }
     }
 
     if (title.length === 0) {
       return { message: "fältet 'title' får inte lämnas tomt" }
-    } else if (author.length === 0) {
-      return { message: "fältet 'author' får inte lämnas tomt" }
-    } else if (content.length === 0) {
+    } 
+    else if (content.length === 0) {
       return { message: "fältet 'content' får inte lämnas tomt" }
     }
 
-    const result = await collection.updateOne({ _id: id }, { $set: { title: title, author: author, content: content, date: date } })
+    const result = await collection.updateOne({ _id: id }, { $set: { title: title, content: content, date: date } })
 
     if (result.matchedCount == 0) {
       return { message: " Blogginlägg med id '" + request.params.id + "' kunde inte uppdateras då det inte hittades", uppdated: false }

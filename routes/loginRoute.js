@@ -1,4 +1,4 @@
-
+const { ObjectId } = require('@fastify/mongodb');
 
 async function loginRoutes(fastify, options) {
     const bcrypt = require('bcryptjs');
@@ -27,6 +27,15 @@ async function loginRoutes(fastify, options) {
         return { message: "användarnamn och lösenord matchar ej", loggedIn: false }
       }
   
+    })
+
+    fastify.post('/verify', async (request, reply) => {
+      reply.header("Access-Control-Allow-Origin", "*");
+      await request.jwtVerify()
+      const { id } = request.body;
+      const _id = new ObjectId(id);
+      const user = await users.findOne({ _id: _id });
+      return user
     })
 
 // körs innan schema validering

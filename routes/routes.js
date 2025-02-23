@@ -11,12 +11,6 @@ async function routes(fastify, options) {
     return;
   })
 
-  fastify.post('/verify', async (request, reply) => {
-    reply.header("Access-Control-Allow-Origin", "*");
-    await request.jwtVerify()
-    return { message: "funkar" }
-  })
-
   fastify.get('/posts', async (request, reply) => {
     reply.header("Access-Control-Allow-Origin", "*");
 
